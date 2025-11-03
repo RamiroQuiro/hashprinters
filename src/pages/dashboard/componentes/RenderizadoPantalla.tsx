@@ -1,8 +1,6 @@
 /**
  * Admin dashboard component
  */
-import { useState } from 'react'
-import HeaderDash from './HeaderDash'
 import EventoActual from './Eventos'
 
 import type { Event } from '../../../types'
@@ -11,43 +9,32 @@ import Metricas from './Metricas'
 import { Card } from '@/components/moleculas/Card'
 import { pestanaActiva } from '@/context/dashboard.store'
 import { useStore } from '@nanostores/react'
-
-interface RenderizadoPantallaProps {
-    currentEvent: Event | null
-}
 type RenderizadoPantallaTab = 'dashboard' | 'eventos' | 'moderacion'
 
-export default function RenderizadoPantalla({ 
-  currentEvent, 
-}: RenderizadoPantallaProps) {
+export default function RenderizadoPantalla() {
     const activeTab = useStore(pestanaActiva) as RenderizadoPantallaTab
 console.log('pestaña activa',activeTab)
   const renderizado = () => {
     switch (activeTab) {
       case 'eventos':
         return (
-          <EventoActual 
-            currentEvent={currentEvent}
-          />
+          <EventoActual />
         )
       case 'moderacion':
         return (
-          <Moderacion currentEvent={currentEvent} />
+          <Moderacion currentEvent={null} />
         )
       case 'dashboard':
       default:
         return (
-          <Metricas currentEvent={currentEvent} />
+          <Metricas currentEvent={null} />
         )
     }
   }
 
   return (
     <Card className='p-10 border-none shadow-none'>
-
-      
         {renderizado()}
-      
     </Card>
   )
 }

@@ -1,14 +1,25 @@
 
 import type { APIRoute } from 'astro';
 import { events } from '../../../db/schema';
-import { eq } from 'drizzle-orm';
 import db from '@/db';
+import { createResponse } from '@/utils/responseAPI';
+
+
+
+export const GET: APIRoute=async({request})=>{
+    try {
+        const eventos=await db.select().from(events)
+        return createResponse(200,'Eventos obtenidos correctamente',eventos)
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return createResponse(500,'Error interno del servidor',null)
+    }
+}
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { nombre, hashtag, descripcion, fecha } = body;
-console.log('body',body);
     // Basic validation
     if (!nombre || !hashtag || !fecha) {
       return new Response(JSON.stringify({ message: 'Los campos nombre, hashtag y fecha son obligatorios.' }), { status: 400 });

@@ -1,33 +1,13 @@
-
+import Button from '@/components/atomos/Button'
+import { activateEvent, eventosStore, fetchEventos } from '@/context/eventos.store'
 import type { Event } from '@/types'
-import { useState } from 'react'
+import { useStore } from '@nanostores/react'
+import { useEffect, useState } from 'react'
 
-
-interface EventoActualProps {
-  currentEvent: Event | null
-  onEventChange: (event: Event | null) => void
-}
-
-export default function Eventos({ currentEvent, onEventChange }: EventoActualProps) {
-  const [events, setEvents] = useState<Event[]>([
-    {
-      id: '1',
-      nombre: 'Boda de Ana & Juan',
-      hashtag: 'BodaAnaJuan2024',
-      fecha: '2024-11-15',
-      descripcion: 'Celebración de boda en Santiago del Estero',
-      isActive: false
-    },
-    {
-      id: '2',
-      nombre: 'Fiesta Patronal 2024',
-      hashtag: 'FiestaSantiagueña2024',
-      fecha: '2024-12-10',
-      descripcion: 'Fiesta tradicional de Santiago del Estero',
-      isActive: false
-    }
-  ])
-
+export default function Eventos() {
+  // Correct: Use the store directly for rendering.
+  const {loading,data:eventos,error} = useStore(eventosStore)
+console.log('eventos del storage ->',eventos)
   const [newEvent, setNewEvent] = useState<Omit<Event, 'id' | 'isActive'>>({
     nombre: '',
     hashtag: '',
@@ -35,71 +15,52 @@ export default function Eventos({ currentEvent, onEventChange }: EventoActualPro
     descripcion: ''
   })
 
-  /**
-   * Handle creating a new event
-   */
+  // Correct: Fetch initial data only once on component mount.
+  useEffect(() => {
+    fetchEventos()
+  }, [])
+
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault()
+    
     if (!newEvent.nombre || !newEvent.hashtag || !newEvent.fecha) {
       alert('Por favor, completa los campos obligatorios: Nombre, Hashtag y Fecha')
       return
     }
 
-    const event: Event = {
-      id: Date.now().toString(),
+    const eventPayload: Omit<Event, 'id'> = {
       ...newEvent,
       isActive: false
     }
-try {
-  const response=await fetch('/api/eventos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(event)
-  })
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.message)
-  }
-  const data = await response.json()
-  setEvents([...events, data])
-  setNewEvent({
-    nombre: '',
-    hashtag: '',
-    fecha: '',
-    descripcion: ''
-  })
-} catch (error) {
-  console.error('Error al crear el evento:', error)
-}
+    try {
+      const response = await fetch('/api/eventos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventPayload)
+      })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message)
+      }
+      
+      // Correct: Reset form and refetch all events to update the list.
+      setNewEvent({
+        nombre: '',
+        hashtag: '',
+        fecha: '',
+        descripcion: ''
+      })
+      await fetchEventos();
+
+    } catch (error) {
+      console.error('Error al crear el evento:', error)
+    }
   }
 
-  /**
-   * Handle activating an event
-   */
-  const handleActivateEvent = (event: Event) => {
-    // Deactivate all other events
-    const updatedEvents = events.map(e => ({
-      ...e,
-      isActive: e.id === event.id
-    }))
-    
-    setEvents(updatedEvents)
-    onEventChange(event)
-  }
-
-  /**
-   * Handle deactivating current event
-   */
-  const handleDeactivateEvent = () => {
-    const updatedEvents = events.map(e => ({
-      ...e,
-      isActive: false
-    }))
-    
-    setEvents(updatedEvents)
-    onEventChange(null)
+  const handleActivarEvento = (event: Event) => {
+    activateEvent(event);
   }
 
   return (
@@ -171,7 +132,9 @@ try {
         <div>
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Eventos Existentes</h3>
           <div className="space-y-4">
-            {events.map((event) => (
+            {/* Correct: Render from the store variable `eventos` */}
+            {eventos?.map((event) => (
+              event && event.id && (
               <div key={event.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex justify-between items-start">
                   <div>
@@ -181,19 +144,21 @@ try {
                   </div>
                   <div className="flex space-x-2">
                     {event.isActive ? (
-                      <button
-                        onClick={handleDeactivateEvent}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200"
+                      <Button
+                      disabled={loading}
+                        onClick={() => handleActivarEvento(event)}
+                       variant='cancel'
                       >
                         Desactivar
-                      </button>
+                      </Button>
                     ) : (
-                      <button
-                        onClick={() => handleActivateEvent(event)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200"
+                      <Button
+                      disabled={loading}
+                        onClick={() => handleActivarEvento(event)}
+                       variant='blue'
                       >
                         Activar Evento
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -203,6 +168,7 @@ try {
                   </div>
                 )}
               </div>
+              )
             ))}
           </div>
         </div>

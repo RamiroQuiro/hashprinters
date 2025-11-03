@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "hasPrinters",
+            "database": "${workspaceFolder:printerHash}/db/printerHash.db"
+        }
+    ]
+}
