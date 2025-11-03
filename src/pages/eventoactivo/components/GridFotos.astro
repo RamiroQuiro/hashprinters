@@ -1,0 +1,18 @@
+---
+import CardFotos from "./CardFotos";
+import type { Fotos } from "@/types";
+const { fotos } = Astro.props;
+const onPrintPhoto = (photo: Fotos) => {
+  console.log('Photo printed:', photo)
+}
+---
+
+ <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-10">
+      {fotos.map(foto => (
+        <CardFotos
+          foto={foto}
+          onPrint={onPrintPhoto}
+          client:load
+        />
+      ))}
+    </div>

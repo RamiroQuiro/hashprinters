@@ -1,0 +1,28 @@
+---
+import LayoutEvento from "@/layouts/LayoutEvento.astro";
+import GridFotos from "./components/GridFotos.astro";
+import type { Fotos } from "@/types";
+
+const { eventoId } = Astro.params;
+
+let fotos: Fotos[] = [];
+
+try {
+    const response = await fetch(`${Astro.url.origin}/api/eventos/${eventoId}/fotos?status=aprobada`);
+    const dbPhotos = await response.json();
+    fotos = dbPhotos?.map((photo: any) => ({
+        id: photo.id,
+        imageUrl: photo.imageUrl,
+        username: photo.username,
+        caption: photo.caption || '',
+        isPrinted: photo.impresiones > 0, // Derive from 'impresiones' count
+        isPrinting: false, // Default to false, will be managed by client-side state
+    }));
+} catch (error) {
+    console.error('Error fetching photos for event:', error);
+}
+---
+
+<LayoutEvento>
+    <GridFotos fotos={fotos} />
+</LayoutEvento>

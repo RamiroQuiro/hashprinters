@@ -6,9 +6,32 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "astro": "^5.15.3"
+    "@astrojs/node": "^9.5.0",
+    "@astrojs/react": "^4.4.1",
+    "@astrojs/tailwind": "^6.0.2",
+    "@libsql/client": "^0.15.15",
+    "@nanostores/react": "^1.0.0",
+    "@tailwindcss/vite": "^4.1.16",
+    "add": "^2.0.6",
+    "astro": "^5.15.3",
+    "bcrypt": "^6.0.0",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.7",
+    "lucia-auth": "^1.8.0",
+    "lucide-react": "^0.552.0",
+    "nanostores": "^1.0.1",
+    "react": "^19.2.0",
+    "tailwind": "^4.0.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.16"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "drizzle-kit": "^0.31.6"
   }
 }

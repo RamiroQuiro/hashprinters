@@ -1,0 +1,40 @@
+---
+import HeaderDash from "@/pages/dashboard/componentes/HeaderDash";
+import Button from "../components/atomos/Button";
+import "../styles/global.css";
+import { ArrowLeft } from "lucide-react";
+
+interface Props {
+  title: string;
+  descripcion: string;
+  isBack: boolean;
+}
+const { title, descripcion, isBack } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/src/styles/global.css" rel="stylesheet" />
+  </head>
+  <body class="bg-primary-bg-componentes  text-primary-texto">
+    <HeaderDash client:load />
+
+
+    <main
+      class="not-only:-full w-full b-10 flex flex-1 flex-col overflow-y-auto rounded-2xl "
+    >
+    
+      <slot />
+    </main>
+  </body>
+</html>

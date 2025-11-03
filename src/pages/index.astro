@@ -2,10 +2,48 @@
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const onNavigate = (page: string) => {
+  window.location.href = `/${page}`
+}
 ---
 
 <Layout>
-	<Welcome />
+	 <div class="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+        <div class="w-20 h-20 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-white text-2xl">📸</span>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">
+          PhotoPrint Service
+        </h1>
+        
+        <p class="text-gray-600 mb-8">
+          Servicio de impresión de fotos por hashtag para eventos
+        </p>
+        
+        <div class="space-y-4">
+          <a href="/eventoactivo/2516516"
+            class="block w-full bg-cyan-500 hover:bg-cyan-600 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors duration-200"
+          >
+            🎪 Pantalla Pública del Evento
+          </a>
+          
+          <a href="/dashboard"
+           
+            class="block w-full bg-gray-800 hover:bg-gray-900 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors duration-200"
+          >
+            ⚙️ Panel de Administración
+          </a>
+        </div>
+        
+        <div class="mt-8 p-4 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-700">
+            <strong>Demo Instructions:</strong><br />
+            • Para ver la pantalla pública, haz clic en el primer botón<br />
+            • Para acceder al panel admin, usa: admin / admin123
+          </p>
+        </div>
+      </div>
+    </div>
 </Layout>
